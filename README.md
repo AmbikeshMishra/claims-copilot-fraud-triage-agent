@@ -90,18 +90,19 @@ Paste your OpenAI API key into the sidebar, pick a sample claim (or upload your 
 ## Project structure
 
 ```
-app.py              Streamlit UI
-src/
-  graph.py          LangGraph pipeline (extract -> signal_check -> score_triage -> report)
-  extraction.py     Extract node
-  signals.py        Signal check node
-  scoring.py        Score & triage node
-  report.py         Report node (Markdown + PDF)
-  schema.py         Extracted-claim data model
-  pdf_text.py       Raw PDF text extraction
-  throttle.py       Per-session LLM call throttle
-scripts/            One-off generators/validators for synthetic data
-data/               Synthetic claim PDFs, claims history, category medians
+.
+├── app.py                  Streamlit UI
+├── src/
+│   ├── graph.py            LangGraph pipeline (extract -> signal_check -> score_triage -> report)
+│   ├── extraction.py       Extract node
+│   ├── signals.py          Signal check node
+│   ├── scoring.py          Score & triage node
+│   ├── report.py           Report node (Markdown + PDF)
+│   ├── schema.py           Extracted-claim data model
+│   ├── pdf_text.py         Raw PDF text extraction
+│   └── throttle.py         Per-session LLM call throttle
+├── scripts/                One-off generators/validators for synthetic data
+└── data/                   Synthetic claim PDFs, claims history, category medians
 ```
 
 ## About the author
