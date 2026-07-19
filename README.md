@@ -21,12 +21,15 @@ Or see [Quickstart](#quickstart) to run it locally.
 A [LangGraph](https://github.com/langchain-ai/langgraph) pipeline runs four explicit nodes over every claim, sample or uploaded:
 
 ```mermaid
-flowchart LR
-    A[Claim PDF<br/>sample or upload] --> B[Extract<br/>PyMuPDF + LLM]
-    B --> C[Signal check<br/>5 explainable rules]
-    C --> D[Score & triage<br/>transparent weighted rules]
-    D --> E[Report<br/>Markdown + PDF]
-    E --> F[Streamlit UI<br/>checklist, verdict, download]
+flowchart TD
+    A[Claim PDF<br/>sample or upload]
+    B[Extract<br/>PyMuPDF + LLM]
+    C[Signal check<br/>5 explainable rules]
+    D[Score & triage<br/>transparent weighted rules]
+    E[Report<br/>Markdown + PDF]
+    F[Streamlit UI<br/>checklist, verdict, download]
+
+    A --> B --> C --> D --> E --> F
 ```
 
 1. **Extract** — [PyMuPDF](https://pymupdf.readthedocs.io/) pulls raw text from the PDF; an LLM call (`gpt-4o-mini`) structures it into fields: claimant, policy number, dates, category, amount, diagnosis, treatment, narrative.
@@ -35,6 +38,51 @@ flowchart LR
 4. **Report** — a one-page Markdown/PDF report: extracted facts table, each fired signal with an evidence quote pulled from the source document, the score, and the recommended action.
 
 Nothing here is a trained model. Every signal and every weight is visible in [`src/signals.py`](src/signals.py) and [`src/scoring.py`](src/scoring.py) — that transparency is the point. A future version could swap the fixed weights for a trained model without touching the rest of the pipeline; v1 deliberately doesn't.
+
+## Architecture
+
+```mermaid
+flowchart TD
+    User([Adjuster / demo user])
+
+    subgraph UI["Streamlit UI — app.py"]
+        Picker[Sample-claim picker<br/>or PDF upload]
+        Key[Sidebar: OpenAI API key<br/>+ per-session throttle guard]
+        Results[Signal checklist · verdict banner<br/>Markdown/PDF report download]
+    end
+
+    subgraph Graph["LangGraph pipeline — src/graph.py"]
+        direction TB
+        Extract[Extract]
+        Signals[Signal check]
+        Score[Score & triage]
+        Report[Report]
+        Extract --> Signals --> Score --> Report
+    end
+
+    subgraph Data["Synthetic data — data/"]
+        PDFs[(Claim PDFs)]
+        History[(claims_history.csv)]
+        Medians[(category_medians.csv)]
+    end
+
+    subgraph LLM["OpenAI gpt-4o-mini"]
+        FieldLLM[Field extraction]
+        JudgmentLLM[Narrative & treatment<br/>consistency check]
+    end
+
+    User --> Picker
+    Picker --> Extract
+    PDFs --> Extract
+    Key --> FieldLLM
+    Extract <--> FieldLLM
+    History --> Signals
+    Medians --> Signals
+    Signals <--> JudgmentLLM
+    Report --> Results
+```
+
+The UI, pipeline, data, and LLM calls are cleanly separated: `app.py` only handles rendering and user input, `src/graph.py` wires the four nodes together, and each node (`src/extraction.py`, `src/signals.py`, `src/scoring.py`, `src/report.py`) is independently testable — see `scripts/validate_*.py` for the checks run against all sample claims.
 
 ## Fraud signals
 
