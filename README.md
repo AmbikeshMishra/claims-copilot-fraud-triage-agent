@@ -157,4 +157,4 @@ Paste your OpenAI API key into the sidebar, pick a sample claim (or upload your 
 
 I spent 6+ years in insurance analytics — building fraud models at Max Bupa and pricing models at TCS — before moving into applied AI. This project combines that domain background with an agentic pipeline to show what AI-assisted triage could look like in practice.
 
-**Ambikesh Mishra** · [m.ambikesh@gmail.com](mailto:m.ambikesh@gmail.com)
+**[LinkedIn](https://www.linkedin.com/in/ambikesh-mishra-2775b91b/)** · **m.ambikesh@gmail.com**
