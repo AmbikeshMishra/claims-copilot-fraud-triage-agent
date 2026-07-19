@@ -1,0 +1,5 @@
+claimant_id,claimant_name,policy_no,claim_date,category,amount_inr,status
+CUST-20001,Meera Iyer,POL-HLT-2022-00341,2023-08-01,Day-care Procedure,18000,Approved
+CUST-20004,Kavita Joshi,POL-HLT-2020-00056,2025-09-14,Accidental Injury (Hospitalization),55000,Approved
+CUST-20004,Kavita Joshi,POL-HLT-2020-00056,2026-01-20,Accidental Injury (Hospitalization),62000,Approved
+CUST-20008,Neha Bhatt,POL-HLT-2025-00788,2025-11-10,Day-care Procedure,28000,Approved
